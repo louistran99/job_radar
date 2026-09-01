@@ -1,0 +1,79 @@
+# How to Use — ATS job monitor
+
+Operational guide for local setup, crontab, and GitHub Actions. This repo is standalone; it does not depend on PhoneCharger or `market-research`.
+
+## Prerequisites
+
+- Python 3.10 or newer
+- Git
+
+A GitHub remote is only required for the daily Action (Phase 2). Local CLI and cron work without it.
+
+## First-time local setup
+
+From this repo root:
+
+```bash
+cd /Users/louistran/Documents/resume/job_search
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+In Cursor or VS Code, select the Python interpreter at `.venv/bin/python`.
+
+## Config
+
+Committed defaults live in [`config/jobs.yaml`](config/jobs.yaml): ATS URL templates, company slugs, title phrases, and location keywords.
+
+The first run that uses the default path copies that file to **gitignored** `config/jobs.local.yaml`. Edit the local copy to add companies or uncomment iOS/Android EM patterns without dirtying git.
+
+```bash
+python main.py                  # uses jobs.local.yaml after the first copy
+python main.py --validate-only  # probe slugs; 404s are skipped with a warning
+python main.py --config /path/to/other.yaml
+```
+
+Bad slugs are skipped, not a hard fail. Disable a company with `enabled: false`.
+
+TBD stubs for Workday, SmartRecruiters, and Workable are commented in `sources` (see [ATS API reference](https://conorscode.github.io/ats-api-reference/)).
+
+## Output
+
+Gitignored `output/`:
+
+| File | Purpose |
+|------|---------|
+| `snapshot.json` | Matched jobs from this run (identity `{ats}:{slug}:{job_id}`) |
+| `report.md` | New / Removed / Still open (first run is a baseline, not “all new”) |
+
+The report markdown is the future email body.
+
+## Tests
+
+```bash
+pytest
+```
+
+Tests use in-memory fakes and do not call the network.
+
+## macOS cron (06:00 Pacific)
+
+`crontab -e`. macOS cron uses the system timezone; set the Mac to Pacific or use `CRON_TZ` where supported:
+
+```
+CRON_TZ=America/Los_Angeles
+0 6 * * * cd /Users/louistran/Documents/resume/job_search && mkdir -p output && .venv/bin/python main.py >> output/cron.log 2>&1
+```
+
+## GitHub Action (after local works)
+
+The workflow [`.github/workflows/fetch-jobs.yml`](.github/workflows/fetch-jobs.yml) needs this repo **pushed to GitHub**. There is no remote yet; create one and `git push` before the schedule can run.
+
+- Cron: `0 14 * * *` UTC ≈ 06:00 PST / 07:00 PDT
+- Also runnable via **Actions → Fetch jobs → Run workflow**
+- No secrets for fetching
+- Previous `jobs-snapshot` artifact is downloaded when present (first CI run is a baseline)
+- `output/` is uploaded as `jobs-snapshot` even if the job fails
+
+After the Action is proven, SMTP can be added via `.env` / GitHub Secrets. Email is not in this version.
