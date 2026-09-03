@@ -1,5 +1,5 @@
 # Daily ATS job monitor — append companies, titles, and locations here.
-# Public Greenhouse / Lever / Ashby boards; no API keys.
+# Public Greenhouse / Lever / Ashby / Gem boards; no API keys.
 # Copy-on-first-run: config/jobs.local.yaml (gitignored) is what local runs use.
 
 settings:
@@ -15,6 +15,9 @@ sources:
   ashby:
     enabled: true
     url: "https://api.ashbyhq.com/posting-api/job-board/{slug}"
+  gem:
+    enabled: true
+    url: "https://api.gem.com/job_board/v0/{slug}/job_posts/"
   # TBD — same URL pattern as https://conorscode.github.io/ats-api-reference/
   # workday:
   #   enabled: false
@@ -278,4 +281,8 @@ companies:
   - name: Spotify
     ats: lever
     slug: spotify
+    enabled: true
+  - name: Gem
+    ats: gem
+    slug: gem
     enabled: true

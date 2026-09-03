@@ -18,7 +18,7 @@ CONFIG_DIR = Path(__file__).resolve().parent.parent / "config"
 DEFAULT_JOBS_YAML = CONFIG_DIR / "jobs.yaml"
 LOCAL_JOBS_YAML = CONFIG_DIR / "jobs.local.yaml"
 
-IMPLEMENTED_ATS = frozenset({"greenhouse", "lever", "ashby"})
+IMPLEMENTED_ATS = frozenset({"greenhouse", "lever", "ashby", "gem"})
 
 
 @dataclass

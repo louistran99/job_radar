@@ -85,4 +85,6 @@ def test_committed_jobs_yaml_loads() -> None:
     assert "greenhouse" in loaded.sources
     assert "lever" in loaded.sources
     assert "ashby" in loaded.sources
+    assert "gem" in loaded.sources
     assert "{slug}" in loaded.sources["greenhouse"]["url"]
+    assert "{slug}" in loaded.sources["gem"]["url"]

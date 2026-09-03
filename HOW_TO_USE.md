@@ -36,6 +36,23 @@ python main.py --config /path/to/other.yaml
 
 Bad slugs are skipped, not a hard fail. Disable a company with `enabled: false`.
 
+Gem boards use the path segment from `https://jobs.gem.com/{slug}`:
+
+```yaml
+- name: Gem
+  ats: gem
+  slug: gem
+  enabled: true
+```
+
+Probe a board (same headers as the monitor). Unknown slugs return 404 and are skipped:
+
+```bash
+curl -i 'https://api.gem.com/job_board/v0/gem/job_posts/' \
+  -H 'Accept: application/json' \
+  -H 'User-Agent: job-search-monitor/1.0'
+```
+
 TBD stubs for Workday, SmartRecruiters, and Workable are commented in `sources` (see [ATS API reference](https://conorscode.github.io/ats-api-reference/)).
 
 ## Output

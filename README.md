@@ -1,6 +1,6 @@
 # ATS job monitor
 
-Poll public Greenhouse, Lever, and Ashby job boards for mobile engineering-manager / director roles in the Bay Area, Los Angeles, Orange County, or remote. Diff against the last run and write `output/report.md`.
+Poll public Greenhouse, Lever, Ashby, and Gem job boards for mobile engineering-manager / director roles in the Bay Area, Los Angeles, Orange County, or remote. Diff against the last run and write `output/report.md`.
 
 No API keys. Email is not included yet.
 

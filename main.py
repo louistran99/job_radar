@@ -104,7 +104,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Poll Greenhouse, Lever, and Ashby boards for mobile EM / director roles."
+        description="Poll Greenhouse, Lever, Ashby, and Gem boards for mobile EM / director roles."
     )
     parser.add_argument(
         "--config",

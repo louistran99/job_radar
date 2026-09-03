@@ -4,19 +4,21 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-from src.clients import ashby, greenhouse, lever
+from src.clients import ashby, gem, greenhouse, lever
 from src.models import Company, Job
 
 _EXTRACTORS: dict[str, Callable[[Any], list[dict[str, Any]]]] = {
     "greenhouse": greenhouse.extract_jobs,
     "lever": lever.extract_jobs,
     "ashby": ashby.extract_jobs,
+    "gem": gem.extract_jobs,
 }
 
 _NORMALIZERS: dict[str, Callable[[dict[str, Any], Company], Job | None]] = {
     "greenhouse": greenhouse.normalize,
     "lever": lever.normalize,
     "ashby": ashby.normalize,
+    "gem": gem.normalize,
 }
 
 
