@@ -170,3 +170,29 @@ def test_non_matching_titles_are_excluded(tmp_path: Path) -> None:
     assert "Staff iOS Engineer" not in text
     assert "Engineering Manager, Mobile" not in text
     assert "Baseline run — 0 matched job(s)" in text
+
+
+def test_verbose_logs_fetched_and_matched(tmp_path: Path, caplog) -> None:
+    companies = [Company(name="Acme", ats="greenhouse", slug="acme")]
+    jobs = [
+        _job("acme", "1", "Staff iOS Engineer", "San Francisco, CA"),
+        _job("acme", "2", "Engineering Manager, Mobile", "San Francisco, CA"),
+    ]
+    snapshot = tmp_path / "snapshot.json"
+    report = tmp_path / "report.md"
+    with caplog.at_level("DEBUG"):
+        run(
+            _config(companies),
+            FakeFetcher(jobs={("greenhouse", "acme"): jobs}),
+            snapshot,
+            report,
+            delay_seconds=0,
+        )
+    messages = caplog.messages
+    assert "Acme: 2 job(s) fetched, 1 matched" in messages
+    assert any(
+        "matched: Acme — Engineering Manager, Mobile [San Francisco, CA]" in m
+        for m in messages
+    )
+    assert not any("Staff iOS Engineer" in m for m in messages)
+    assert "Fetched 2 job(s) from 1 board(s); 1 matched filters" in messages

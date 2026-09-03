@@ -63,6 +63,7 @@ def run(
     failed_keys: set[tuple[str, str]] = set()
     skipped_404 = 0
     fetched_ok = 0
+    total_fetched = 0
 
     for index, company in enumerate(companies):
         if index and delay > 0:
@@ -85,9 +86,28 @@ def run(
             continue
 
         fetched_ok += 1
+        total_fetched += len(jobs)
+        company_matched: list[Job] = []
         for job in jobs:
             if job_matches(job, config.title_patterns, config.locations):
                 matched[job.id] = job
+                company_matched.append(job)
+        logger.debug(
+            "%s: %s job(s) fetched, %s matched",
+            company.name,
+            len(jobs),
+            len(company_matched),
+        )
+        for job in company_matched:
+            loc = ", ".join(job.locations) or "(no location)"
+            logger.debug("  matched: %s — %s [%s]", job.company, job.title, loc)
+
+    logger.debug(
+        "Fetched %s job(s) from %s board(s); %s matched filters",
+        total_fetched,
+        fetched_ok,
+        len(matched),
+    )
 
     current = merge_current_with_previous(previous, matched, failed_keys)
     diff = diff_snapshots(previous, current)
@@ -140,6 +160,8 @@ def main() -> None:
         level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(levelname)s: %(message)s",
     )
+    if args.verbose:
+        logging.getLogger("urllib3").setLevel(logging.WARNING)
 
     config_path = args.config if args.config is not None else DEFAULT_JOBS_YAML
     resolved = resolve_config_path(config_path)
