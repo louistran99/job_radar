@@ -77,5 +77,14 @@ def location_matches(job: Job, locations: dict[str, list[str]]) -> bool:
     return is_remote_job(job, locations.get("remote") or [])
 
 
-def job_matches(job: Job, title_patterns: list[str], locations: dict[str, list[str]]) -> bool:
-    return title_matches(job.title, title_patterns) and location_matches(job, locations)
+def job_matches(
+    job: Job,
+    level_patterns: list[str],
+    domain_patterns: list[str],
+    locations: dict[str, list[str]],
+) -> bool:
+    return (
+        title_matches(job.title, level_patterns)
+        and title_matches(job.title, domain_patterns)
+        and location_matches(job, locations)
+    )

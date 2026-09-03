@@ -25,7 +25,8 @@ IMPLEMENTED_ATS = frozenset({"greenhouse", "lever", "ashby", "gem"})
 class JobsConfig:
     sources: dict[str, dict[str, Any]] = field(default_factory=dict)
     companies: list[Company] = field(default_factory=list)
-    title_patterns: list[str] = field(default_factory=list)
+    level_patterns: list[str] = field(default_factory=list)
+    domain_patterns: list[str] = field(default_factory=list)
     locations: dict[str, list[str]] = field(default_factory=dict)
     delay_seconds: float = 0.35
 
@@ -85,9 +86,17 @@ def load_jobs_config(config_path: Path) -> JobsConfig:
             )
         )
 
-    title_patterns = [
+    raw_title_match = data.get("title_match") or {}
+    if not isinstance(raw_title_match, dict):
+        raw_title_match = {}
+    level_patterns = [
         str(p).strip()
-        for p in (data.get("title_patterns") or [])
+        for p in (raw_title_match.get("level") or [])
+        if str(p).strip()
+    ]
+    domain_patterns = [
+        str(p).strip()
+        for p in (raw_title_match.get("domain") or [])
         if str(p).strip()
     ]
 
@@ -106,7 +115,8 @@ def load_jobs_config(config_path: Path) -> JobsConfig:
     return JobsConfig(
         sources=sources,
         companies=companies,
-        title_patterns=title_patterns,
+        level_patterns=level_patterns,
+        domain_patterns=domain_patterns,
         locations=locations,
         delay_seconds=delay,
     )

@@ -89,7 +89,12 @@ def run(
         total_fetched += len(jobs)
         company_matched: list[Job] = []
         for job in jobs:
-            if job_matches(job, config.title_patterns, config.locations):
+            if job_matches(
+                job,
+                config.level_patterns,
+                config.domain_patterns,
+                config.locations,
+            ):
                 matched[job.id] = job
                 company_matched.append(job)
         logger.debug(

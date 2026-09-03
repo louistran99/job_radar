@@ -1,4 +1,4 @@
-# Daily ATS job monitor — append companies, titles, and locations here.
+# Daily ATS job monitor — append companies, title_match phrases, and locations here.
 # Public Greenhouse / Lever / Ashby / Gem boards; no API keys.
 # Copy-on-first-run: config/jobs.local.yaml (gitignored) is what local runs use.
 
@@ -31,30 +31,19 @@ sources:
   #   enabled: false
   #   url: "https://apply.workable.com/api/v1/widget/accounts/{slug}"
 
-title_patterns:
-  - engineering manager, mobile
-  - engineering manager mobile
-  - mobile engineering manager
-  - em, mobile
-  - mobile em
-  - head of mobile
-  - head of mobile engineering
-  - director of mobile
-  - director of mobile engineering
-  - director, mobile engineering
-  - director, mobile
-  - mobile director
-  # Optional iOS / Android EM patterns — uncomment to include:
-  # - engineering manager, ios
-  # - senior engineering manager, ios
-  # - em, ios
-  # - head of ios
-  # - director of ios
-  # - engineering manager, android
-  # - senior engineering manager, android
-  # - em, android
-  # - head of android
-  # - director of android
+# Title must hit at least one level phrase AND at least one domain phrase.
+title_match:
+  level:
+    - manager
+    - head of
+    - director
+  domain:
+    - mobile
+    - ios
+    - android
+    - app experience
+    - client
+    - consumer app
 
 locations:
   bay_area:

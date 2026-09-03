@@ -44,7 +44,10 @@ def test_load_jobs_config_from_yaml(tmp_path: Path) -> None:
                         "url": "https://example.com/{slug}",
                     }
                 },
-                "title_patterns": ["engineering manager, mobile"],
+                "title_match": {
+                    "level": ["engineering manager"],
+                    "domain": ["mobile"],
+                },
                 "locations": {"bay_area": ["san francisco"]},
                 "companies": [
                     {
@@ -69,14 +72,16 @@ def test_load_jobs_config_from_yaml(tmp_path: Path) -> None:
     assert loaded.companies[0] == Company(
         name="Acme", ats="greenhouse", slug="acme", enabled=True
     )
-    assert loaded.title_patterns == ["engineering manager, mobile"]
+    assert loaded.level_patterns == ["engineering manager"]
+    assert loaded.domain_patterns == ["mobile"]
     assert loaded.locations["bay_area"] == ["san francisco"]
 
 
 def test_committed_jobs_yaml_loads() -> None:
     root = Path(__file__).resolve().parent.parent
     loaded = load_jobs_config(root / "config" / "jobs.yaml")
-    assert loaded.title_patterns
+    assert loaded.level_patterns
+    assert loaded.domain_patterns
     assert loaded.locations["bay_area"]
     assert loaded.locations["los_angeles"]
     assert loaded.locations["orange_county"]

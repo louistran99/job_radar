@@ -8,7 +8,8 @@ from tests.fakes import FakeFetcher
 
 from main import run
 
-PATTERNS = ["engineering manager, mobile", "head of mobile"]
+LEVEL = ["engineering manager", "head of"]
+DOMAIN = ["mobile"]
 LOCATIONS = {
     "bay_area": ["san francisco"],
     "los_angeles": ["los angeles"],
@@ -26,7 +27,8 @@ def _config(companies: list[Company]) -> JobsConfig:
             }
         },
         companies=companies,
-        title_patterns=PATTERNS,
+        level_patterns=LEVEL,
+        domain_patterns=DOMAIN,
         locations=LOCATIONS,
         delay_seconds=0,
     )

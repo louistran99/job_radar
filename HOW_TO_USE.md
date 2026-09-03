@@ -24,9 +24,9 @@ In Cursor or VS Code, select the Python interpreter at `.venv/bin/python`.
 
 ## Config
 
-Committed defaults live in [`config/jobs.yaml`](config/jobs.yaml): ATS URL templates, company slugs, title phrases, and location keywords.
+Committed defaults live in [`config/jobs.yaml`](config/jobs.yaml): ATS URL templates, company slugs, title match axes (level AND domain), and location keywords.
 
-The first run that uses the default path copies that file to **gitignored** `config/jobs.local.yaml`. Edit the local copy to add companies or uncomment iOS/Android EM patterns without dirtying git.
+The first run that uses the default path copies that file to **gitignored** `config/jobs.local.yaml`. Edit the local copy to add companies or change level/domain phrases without dirtying git.
 
 ```bash
 python main.py                  # uses jobs.local.yaml after the first copy
