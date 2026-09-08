@@ -199,6 +199,10 @@ companies:
     ats: ashby
     slug: plaid
     enabled: true
+  name: Nerdwallet
+    ats: ashby
+    slug: nerdwallet
+    enabled: true
   - name: Roblox
     ats: greenhouse
     slug: roblox
