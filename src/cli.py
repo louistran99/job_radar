@@ -44,6 +44,7 @@ def run(
     *,
     validate_only: bool = False,
     delay_seconds: float | None = None,
+    replace_report: bool = False,
     on_progress: Callable[[int, str], None] | None = None,
 ) -> int:
     companies = enabled_companies(config)
@@ -145,8 +146,9 @@ def run(
         companies_fetched=fetched_ok,
         boards_skipped=skipped_404,
     )
-    write_report(report_path, markdown)
-    logger.info("%s", stdout_summary(diff, report_path))
+    appended = report_path.exists() and not replace_report
+    write_report(report_path, markdown, replace=replace_report)
+    logger.info("%s", stdout_summary(diff, report_path, appended=appended))
     return 0
 
 
@@ -169,6 +171,11 @@ def main() -> None:
         type=Path,
         default=DEFAULT_OUTPUT_DIR,
         help=f"Directory for snapshot.json and report.md (default: {DEFAULT_OUTPUT_DIR})",
+    )
+    parser.add_argument(
+        "--replace-report",
+        action="store_true",
+        help="Overwrite output/report.md instead of appending this run",
     )
     parser.add_argument(
         "--delay",
@@ -210,6 +217,7 @@ def main() -> None:
         report_path,
         validate_only=args.validate_only,
         delay_seconds=args.delay,
+        replace_report=args.replace_report,
         on_progress=progress,
     )
     raise SystemExit(code)

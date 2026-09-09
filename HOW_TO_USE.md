@@ -28,8 +28,9 @@ Committed defaults live in [`config/jobs.yaml`](config/jobs.yaml): ATS URL templ
 The first run that uses the default path copies that file to **gitignored** `config/jobs.local.yaml`. Edit the local copy to add companies or change level/domain phrases without dirtying git.
 
 ```bash
-python3 main.py --verbose       # setup + fetch (creates .venv on first run)
-python3 main.py --validate-only # probe slugs; 404s are skipped with a warning
+python3 main.py --verbose         # setup + fetch (creates .venv on first run)
+python3 main.py --validate-only   # probe slugs; 404s are skipped with a warning
+python3 main.py --replace-report  # overwrite report.md instead of appending
 python3 main.py --config /path/to/other.yaml
 ```
 
@@ -61,7 +62,7 @@ Gitignored `output/`:
 | File | Purpose |
 |------|---------|
 | `snapshot.json` | Matched jobs from this run (identity `{ats}:{slug}:{job_id}`) |
-| `report.md` | New / Removed / Still open (first run is a baseline, not “all new”) |
+| `report.md` | New / Removed / Still open (first run is a baseline, not “all new”). Each run appends; `--replace-report` overwrites. |
 
 The report markdown is the future email body.
 

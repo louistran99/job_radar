@@ -91,6 +91,38 @@ def test_second_run_reports_new_and_removed(tmp_path: Path) -> None:
     assert "Head of Mobile" in text
     assert "## Removed (1)" in text
     assert "Engineering Manager, Mobile" in text
+    assert text.count("# Job monitor") == 2
+    assert "Baseline" in text
+
+
+def test_replace_report_overwrites_previous_run(tmp_path: Path) -> None:
+    companies = [Company(name="Acme", ats="greenhouse", slug="acme")]
+    first = _job("acme", "1", "Engineering Manager, Mobile", "San Francisco, CA")
+    second = _job("acme", "2", "Head of Mobile", "San Francisco, CA")
+    snapshot = tmp_path / "snapshot.json"
+    report = tmp_path / "report.md"
+    config = _config(companies)
+    run(
+        config,
+        FakeFetcher(jobs={("greenhouse", "acme"): [first]}),
+        snapshot,
+        report,
+        delay_seconds=0,
+    )
+    code = run(
+        config,
+        FakeFetcher(jobs={("greenhouse", "acme"): [second]}),
+        snapshot,
+        report,
+        delay_seconds=0,
+        replace_report=True,
+    )
+    assert code == 0
+    text = report.read_text(encoding="utf-8")
+    assert text.count("# Job monitor") == 1
+    assert "Baseline" not in text
+    assert "## New (1)" in text
+    assert "Head of Mobile" in text
 
 
 def test_404_skip_still_writes_report(tmp_path: Path) -> None:

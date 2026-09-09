@@ -71,14 +71,23 @@ def render_report(
     return "\n".join(lines).rstrip() + "\n"
 
 
-def write_report(path: Path, markdown: str) -> None:
+def write_report(path: Path, markdown: str, *, replace: bool = False) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    if replace or not path.exists():
+        body = markdown
+    else:
+        existing = path.read_text(encoding="utf-8")
+        body = existing.rstrip() + "\n\n" + markdown.lstrip("\n")
+        if not body.endswith("\n"):
+            body += "\n"
     tmp = path.with_name(path.name + ".tmp")
-    tmp.write_text(markdown, encoding="utf-8")
+    tmp.write_text(body, encoding="utf-8")
     os.replace(tmp, path)
 
 
-def stdout_summary(diff: Diff, report_path: Path) -> str:
+def stdout_summary(
+    diff: Diff, report_path: Path, *, appended: bool = False
+) -> str:
     if diff.baseline:
         body = f"Baseline: {len(diff.still_open)} matched job(s)"
     else:
@@ -87,4 +96,5 @@ def stdout_summary(diff: Diff, report_path: Path) -> str:
             f"Removed: {len(diff.removed)}  "
             f"Still open: {len(diff.still_open)}"
         )
-    return f"{body}\nWrote {report_path}"
+    verb = "Appended" if appended else "Wrote"
+    return f"{body}\n{verb} {report_path}"
