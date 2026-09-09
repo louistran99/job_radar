@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from typing import Any
 
 from src.clients.http import ATSClientError, BoardNotFoundError
@@ -26,11 +27,17 @@ def probe_company(fetcher: Fetcher, company: Company) -> tuple[list[Job] | None,
 
 
 def validate_companies(
-    fetcher: Fetcher, companies: list[Company]
+    fetcher: Fetcher,
+    companies: list[Company],
+    *,
+    on_company: Callable[[Company, int, int], None] | None = None,
 ) -> tuple[list[Company], list[tuple[Company, str]]]:
     valid: list[Company] = []
     skipped: list[tuple[Company, str]] = []
-    for company in companies:
+    total = len(companies)
+    for index, company in enumerate(companies, start=1):
+        if on_company:
+            on_company(company, index, total)
         jobs, error = probe_company(fetcher, company)
         if error is None:
             valid.append(company)

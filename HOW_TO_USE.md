@@ -14,10 +14,10 @@ A GitHub remote is only required for the daily Action (Phase 2). Local CLI and c
 From this repo root:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+python3 main.py --verbose
 ```
+
+That one command creates `.venv`, installs dependencies, then fetches. Later runs reuse the venv and skip install when packages are already present. Progress prints as `1 of 5 (…)` through `5 of 5 (…)`.
 
 In Cursor or VS Code, select the Python interpreter at `.venv/bin/python`.
 
@@ -28,9 +28,10 @@ Committed defaults live in [`config/jobs.yaml`](config/jobs.yaml): ATS URL templ
 The first run that uses the default path copies that file to **gitignored** `config/jobs.local.yaml`. Edit the local copy to add companies or change level/domain phrases without dirtying git.
 
 ```bash
-python main.py                  # uses jobs.local.yaml after the first copy
-python main.py --validate-only  # probe slugs; 404s are skipped with a warning
-python main.py --config /path/to/other.yaml
+python3 main.py --verbose         # setup + fetch (creates .venv on first run)
+python3 main.py --validate-only   # probe slugs; 404s are skipped with a warning
+python3 main.py --replace-report  # overwrite report.md instead of appending
+python3 main.py --config /path/to/other.yaml
 ```
 
 Bad slugs are skipped, not a hard fail. Disable a company with `enabled: false`.
@@ -61,7 +62,7 @@ Gitignored `output/`:
 | File | Purpose |
 |------|---------|
 | `snapshot.json` | Matched jobs from this run (identity `{ats}:{slug}:{job_id}`) |
-| `report.md` | New / Removed / Still open (first run is a baseline, not “all new”) |
+| `report.md` | New / Removed / Still open (first run is a baseline, not “all new”). Each run appends; `--replace-report` overwrites. |
 
 The report markdown is the future email body.
 

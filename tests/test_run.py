@@ -2,11 +2,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from src.config import JobsConfig
 from src.models import Company, Job
 from tests.fakes import FakeFetcher
 
-from main import run
+from src.cli import run
 
 LEVEL = ["engineering manager", "head of"]
 DOMAIN = ["mobile"]
@@ -89,6 +91,38 @@ def test_second_run_reports_new_and_removed(tmp_path: Path) -> None:
     assert "Head of Mobile" in text
     assert "## Removed (1)" in text
     assert "Engineering Manager, Mobile" in text
+    assert text.count("# Job monitor") == 2
+    assert "Baseline" in text
+
+
+def test_replace_report_overwrites_previous_run(tmp_path: Path) -> None:
+    companies = [Company(name="Acme", ats="greenhouse", slug="acme")]
+    first = _job("acme", "1", "Engineering Manager, Mobile", "San Francisco, CA")
+    second = _job("acme", "2", "Head of Mobile", "San Francisco, CA")
+    snapshot = tmp_path / "snapshot.json"
+    report = tmp_path / "report.md"
+    config = _config(companies)
+    run(
+        config,
+        FakeFetcher(jobs={("greenhouse", "acme"): [first]}),
+        snapshot,
+        report,
+        delay_seconds=0,
+    )
+    code = run(
+        config,
+        FakeFetcher(jobs={("greenhouse", "acme"): [second]}),
+        snapshot,
+        report,
+        delay_seconds=0,
+        replace_report=True,
+    )
+    assert code == 0
+    text = report.read_text(encoding="utf-8")
+    assert text.count("# Job monitor") == 1
+    assert "Baseline" not in text
+    assert "## New (1)" in text
+    assert "Head of Mobile" in text
 
 
 def test_404_skip_still_writes_report(tmp_path: Path) -> None:
@@ -198,3 +232,39 @@ def test_verbose_logs_fetched_and_matched(tmp_path: Path, caplog) -> None:
     )
     assert not any("Staff iOS Engineer" in m for m in messages)
     assert "Fetched 2 job(s) from 1 board(s); 1 matched filters" in messages
+
+
+def test_run_progress_callback_is_optional_and_quiet(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    companies = [Company(name="Acme", ats="greenhouse", slug="acme")]
+    job = _job("acme", "1", "Engineering Manager, Mobile", "San Francisco, CA")
+    run(
+        _config(companies),
+        FakeFetcher(jobs={("greenhouse", "acme"): [job]}),
+        tmp_path / "snapshot.json",
+        tmp_path / "report.md",
+        delay_seconds=0,
+    )
+    assert capsys.readouterr().out == ""
+
+
+def test_run_reports_fetch_progress(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    companies = [Company(name="Acme", ats="greenhouse", slug="acme")]
+    job = _job("acme", "1", "Engineering Manager, Mobile", "San Francisco, CA")
+    seen: list[tuple[int, str]] = []
+    run(
+        _config(companies),
+        FakeFetcher(jobs={("greenhouse", "acme"): [job]}),
+        tmp_path / "snapshot.json",
+        tmp_path / "report.md",
+        delay_seconds=0,
+        on_progress=lambda step, description: seen.append((step, description)),
+    )
+    assert seen == [
+        (4, "Fetch and match jobs"),
+        (5, "Write snapshot and report"),
+    ]
+    assert capsys.readouterr().out == "fetch Acme — 1/1\n"
