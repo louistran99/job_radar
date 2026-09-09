@@ -14,7 +14,6 @@ A GitHub remote is only required for the daily Action (Phase 2). Local CLI and c
 From this repo root:
 
 ```bash
-cd /Users/louistran/Documents/resume/job_search
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -76,11 +75,11 @@ Tests use in-memory fakes and do not call the network.
 
 ## macOS cron (06:00 Pacific)
 
-`crontab -e`. macOS cron uses the system timezone; set the Mac to Pacific or use `CRON_TZ` where supported:
+`crontab -e`. macOS cron uses the system timezone; set the Mac to Pacific or use `CRON_TZ` where supported. Replace `/path/to/this/repo` with the absolute path to your clone:
 
 ```
 CRON_TZ=America/Los_Angeles
-0 6 * * * cd /Users/louistran/Documents/resume/job_search && mkdir -p output && .venv/bin/python main.py >> output/cron.log 2>&1
+0 6 * * * cd /path/to/this/repo && mkdir -p output && .venv/bin/python main.py >> output/cron.log 2>&1
 ```
 
 ## GitHub Action (after local works)
