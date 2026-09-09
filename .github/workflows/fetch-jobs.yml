@@ -1,0 +1,46 @@
+name: Fetch jobs
+
+on:
+  schedule:
+    - cron: "0 14 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Download previous snapshot
+        uses: dawidd6/action-download-artifact@v6
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: fetch-jobs.yml
+          name: jobs-snapshot
+          path: output
+          search_artifacts: true
+          workflow_conclusion: success
+          if_no_artifact_found: warn
+
+      - name: Fetch jobs
+        run: python main.py --config config/jobs.yaml
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jobs-snapshot
+          path: output/
+          if-no-files-found: warn
+          retention-days: 30

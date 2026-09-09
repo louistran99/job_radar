@@ -84,7 +84,7 @@ CRON_TZ=America/Los_Angeles
 
 ## GitHub Action (after local works)
 
-The workflow [`.github/workflows/fetch-jobs.yml`](.github/workflows/fetch-jobs.yml) needs this repo **pushed to GitHub**. There is no remote yet; create one and `git push` before the schedule can run.
+The workflow [`.github/workflows/fetch-jobs.yml`](.github/workflows/fetch-jobs.yml) lives on `main` at `github.com:louistran99/job_radar`. The daily schedule only runs from the default branch.
 
 - Cron: `0 14 * * *` UTC ≈ 06:00 PST / 07:00 PDT
 - Also runnable via **Actions → Fetch jobs → Run workflow**
