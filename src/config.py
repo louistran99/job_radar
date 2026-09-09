@@ -57,9 +57,34 @@ def resolve_config_path(config_path: Path | None) -> Path:
     return config_path
 
 
+def _format_yaml_error(config_path: Path, exc: yaml.YAMLError) -> str:
+    lines = [f"Invalid YAML in {config_path}"]
+    context = getattr(exc, "context", None)
+    context_mark = getattr(exc, "context_mark", None)
+    problem = getattr(exc, "problem", None)
+    problem_mark = getattr(exc, "problem_mark", None)
+    if context and context_mark is not None:
+        lines.append(f"  {context}")
+        lines.append(
+            f"  at line {context_mark.line + 1}, column {context_mark.column + 1}"
+        )
+    if problem and problem_mark is not None:
+        lines.append(f"  {problem}")
+        lines.append(
+            f"  at line {problem_mark.line + 1}, column {problem_mark.column + 1}"
+        )
+    if len(lines) == 1:
+        lines.append(f"  {exc}")
+    return "\n".join(lines)
+
+
 def load_jobs_config(config_path: Path) -> JobsConfig:
-    with config_path.open(encoding="utf-8") as f:
-        data = yaml.safe_load(f) or {}
+    try:
+        with config_path.open(encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+    except yaml.YAMLError as exc:
+        raise SystemExit(_format_yaml_error(config_path, exc)) from None
+
     if not isinstance(data, dict):
         raise SystemExit(f"Config {config_path} must be a YAML mapping.")
 
