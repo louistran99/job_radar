@@ -5,10 +5,7 @@ Poll public Greenhouse, Lever, Ashby, and Gem job boards for titles that match b
 No API keys. Email is not included yet.
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python main.py
+python3 main.py --verbose
 ```
 
 See [HOW_TO_USE.md](HOW_TO_USE.md) for local cron, GitHub Actions, and how to add companies.
