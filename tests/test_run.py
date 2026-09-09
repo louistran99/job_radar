@@ -217,7 +217,9 @@ def test_run_progress_callback_is_optional_and_quiet(
     assert capsys.readouterr().out == ""
 
 
-def test_run_reports_fetch_progress(tmp_path: Path) -> None:
+def test_run_reports_fetch_progress(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     companies = [Company(name="Acme", ats="greenhouse", slug="acme")]
     job = _job("acme", "1", "Engineering Manager, Mobile", "San Francisco, CA")
     seen: list[tuple[int, str]] = []
@@ -231,6 +233,6 @@ def test_run_reports_fetch_progress(tmp_path: Path) -> None:
     )
     assert seen == [
         (4, "Fetch and match jobs"),
-        (4, "fetch Acme — 1/1"),
         (5, "Write snapshot and report"),
     ]
+    assert capsys.readouterr().out == "fetch Acme — 1/1\n"
