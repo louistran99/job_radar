@@ -1,0 +1,9 @@
+.venv/
+.env
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+.pytest_cache/
+output/
+config/jobs.local.yaml
