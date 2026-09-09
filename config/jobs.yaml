@@ -199,7 +199,7 @@ companies:
     ats: ashby
     slug: plaid
     enabled: true
-  name: Nerdwallet
+  - name: Nerdwallet
     ats: ashby
     slug: nerdwallet
     enabled: true
