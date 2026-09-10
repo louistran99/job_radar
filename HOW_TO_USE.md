@@ -1,6 +1,6 @@
 # How to Use — ATS job monitor
 
-Operational guide for local setup, crontab, and GitHub Actions. This repo is standalone; it does not depend on PhoneCharger or `market-research`.
+Operational guide for local setup, crontab, and GitHub Actions.
 
 ## Prerequisites
 
