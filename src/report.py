@@ -77,7 +77,7 @@ def write_report(path: Path, markdown: str, *, replace: bool = False) -> None:
         body = markdown
     else:
         existing = path.read_text(encoding="utf-8")
-        body = existing.rstrip() + "\n\n" + markdown.lstrip("\n")
+        body = markdown.rstrip() + "\n\n" + existing.lstrip("\n")
         if not body.endswith("\n"):
             body += "\n"
     tmp = path.with_name(path.name + ".tmp")
@@ -86,7 +86,7 @@ def write_report(path: Path, markdown: str, *, replace: bool = False) -> None:
 
 
 def stdout_summary(
-    diff: Diff, report_path: Path, *, appended: bool = False
+    diff: Diff, report_path: Path, *, prepended: bool = False
 ) -> str:
     if diff.baseline:
         body = f"Baseline: {len(diff.still_open)} matched job(s)"
@@ -96,5 +96,5 @@ def stdout_summary(
             f"Removed: {len(diff.removed)}  "
             f"Still open: {len(diff.still_open)}"
         )
-    verb = "Appended" if appended else "Wrote"
+    verb = "Prepended" if prepended else "Wrote"
     return f"{body}\n{verb} {report_path}"

@@ -6,4 +6,5 @@ __pycache__/
 .DS_Store
 .pytest_cache/
 output/
+config/jobs.local.json
 config/jobs.local.yaml

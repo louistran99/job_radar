@@ -1,0 +1,43 @@
+{
+  "greenhouse": {
+    "enabled": true,
+    "url": "https://boards-api.greenhouse.io/v1/boards/{slug}/jobs"
+  },
+  "lever": {
+    "enabled": true,
+    "url": "https://api.lever.co/v0/postings/{slug}?mode=json"
+  },
+  "ashby": {
+    "enabled": true,
+    "url": "https://api.ashbyhq.com/posting-api/job-board/{slug}"
+  },
+  "gem": {
+    "enabled": true,
+    "url": "https://api.gem.com/job_board/v0/{slug}/job_posts/"
+  },
+  "workday": {
+    "enabled": false,
+    "method": "POST",
+    "url": "https://{tenant}.{shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs"
+  },
+  "smartrecruiters": {
+    "enabled": false,
+    "url": "https://api.smartrecruiters.com/v1/companies/{slug}/postings"
+  },
+  "workable": {
+    "enabled": false,
+    "url": "https://apply.workable.com/api/v1/widget/accounts/{slug}"
+  },
+  "recruitee": {
+    "enabled": false,
+    "url": "https://{slug}.recruitee.com/api/offers/"
+  },
+  "personio": {
+    "enabled": false,
+    "url": "https://{slug}.jobs.personio.de/search.json"
+  },
+  "bamboohr": {
+    "enabled": false,
+    "url": "https://{slug}.bamboohr.com/careers/list"
+  }
+}

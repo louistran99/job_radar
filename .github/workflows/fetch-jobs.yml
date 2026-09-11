@@ -35,7 +35,7 @@ jobs:
           if_no_artifact_found: warn
 
       - name: Fetch jobs
-        run: python main.py --config config/jobs.yaml
+        run: python main.py --config config/jobs.json
 
       - uses: actions/upload-artifact@v4
         if: always()
