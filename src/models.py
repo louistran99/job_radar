@@ -47,5 +47,6 @@ class Job:
 class Company:
     name: str
     ats: str
-    slug: str
+    slug: str = ""
     enabled: bool = True
+    params: dict[str, Any] = field(default_factory=dict)

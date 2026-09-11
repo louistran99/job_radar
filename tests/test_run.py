@@ -93,6 +93,7 @@ def test_second_run_reports_new_and_removed(tmp_path: Path) -> None:
     assert "Engineering Manager, Mobile" in text
     assert text.count("# Job monitor") == 2
     assert "Baseline" in text
+    assert text.index("## New (1)") < text.index("Baseline")
 
 
 def test_replace_report_overwrites_previous_run(tmp_path: Path) -> None:

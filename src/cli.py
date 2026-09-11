@@ -11,11 +11,12 @@ from pathlib import Path
 from src.bootstrap import REPO_ROOT, progress, status
 from src.clients.http import ATSClientError, BoardNotFoundError, make_session
 from src.config import (
-    DEFAULT_JOBS_YAML,
+    DEFAULT_JOBS_JSON,
     JobsConfig,
     enabled_companies,
-    load_jobs_config,
-    resolve_config_path,
+    load_app_config,
+    resolve_companies_path,
+    resolve_jobs_path,
 )
 from src.fetch import Fetcher, LiveFetcher
 from src.match import job_matches
@@ -49,7 +50,9 @@ def run(
 ) -> int:
     companies = enabled_companies(config)
     if not companies:
-        logger.error("No enabled companies to fetch. Check config/jobs.yaml.")
+        logger.error(
+            "No enabled companies to fetch. Check config/companies.json and config/ats.json."
+        )
         return 1
 
     delay = config.delay_seconds if delay_seconds is None else delay_seconds
@@ -146,9 +149,9 @@ def run(
         companies_fetched=fetched_ok,
         boards_skipped=skipped_404,
     )
-    appended = report_path.exists() and not replace_report
+    prepended = report_path.exists() and not replace_report
     write_report(report_path, markdown, replace=replace_report)
-    logger.info("%s", stdout_summary(diff, report_path, appended=appended))
+    logger.info("%s", stdout_summary(diff, report_path, prepended=prepended))
     return 0
 
 
@@ -159,7 +162,14 @@ def main() -> None:
     parser.add_argument(
         "--config",
         type=Path,
-        help="Path to jobs.yaml (default: config/jobs.yaml, then jobs.local.yaml)",
+        help="Path to jobs.json (default: config/jobs.json, then jobs.local.json)",
+    )
+    parser.add_argument(
+        "--small-set",
+        type=Path,
+        dest="small_set",
+        help="Path to a companies JSON subset (default: config/companies.json). "
+        "Relative names also resolve under config/, e.g. --small-set smallset.json",
     )
     parser.add_argument(
         "--validate-only",
@@ -175,7 +185,7 @@ def main() -> None:
     parser.add_argument(
         "--replace-report",
         action="store_true",
-        help="Overwrite output/report.md instead of appending this run",
+        help="Overwrite output/report.md instead of prepending this run",
     )
     parser.add_argument(
         "--delay",
@@ -199,13 +209,14 @@ def main() -> None:
         logging.getLogger("urllib3").setLevel(logging.WARNING)
 
     progress(3, "Load config")
-    config_path = args.config if args.config is not None else DEFAULT_JOBS_YAML
-    resolved = resolve_config_path(config_path)
+    config_path = args.config if args.config is not None else DEFAULT_JOBS_JSON
+    resolved = resolve_jobs_path(config_path)
     if not resolved.exists():
         logger.error("Config file not found: %s", resolved)
         raise SystemExit(1)
 
-    config = load_jobs_config(resolved)
+    companies_path = resolve_companies_path(args.small_set)
+    config = load_app_config(resolved, companies_path=companies_path)
     output_dir = args.output_dir
     snapshot_path = output_dir / "snapshot.json"
     report_path = output_dir / "report.md"

@@ -1,0 +1,112 @@
+{
+  "settings": {
+    "delay_seconds": 0.35
+  },
+  "title_match": {
+    "level": [
+      "manager",
+      "head of",
+      "director"
+    ],
+    "domain": [
+      "mobile",
+      "ios",
+      "android",
+      "app experience",
+      "client",
+      "consumer app"
+    ]
+  },
+  "locations": {
+    "bay_area": [
+      "san francisco",
+      "sf",
+      "bay area",
+      "south bay",
+      "east bay",
+      "peninsula",
+      "silicon valley",
+      "oakland",
+      "berkeley",
+      "san jose",
+      "palo alto",
+      "mountain view",
+      "sunnyvale",
+      "cupertino",
+      "santa clara",
+      "menlo park",
+      "redwood city",
+      "san mateo",
+      "foster city",
+      "burlingame",
+      "daly city",
+      "fremont",
+      "hayward",
+      "walnut creek",
+      "pleasanton",
+      "mill valley",
+      "marin",
+      "alameda",
+      "emeryville",
+      "dublin",
+      "livermore",
+      "los gatos",
+      "campbell",
+      "milpitas",
+      "union city",
+      "san ramon",
+      "south san francisco",
+      "soma",
+      "mission bay"
+    ],
+    "los_angeles": [
+      "los angeles",
+      "la metro",
+      "santa monica",
+      "culver city",
+      "venice",
+      "hollywood",
+      "burbank",
+      "glendale",
+      "pasadena",
+      "el segundo",
+      "playa vista",
+      "west hollywood",
+      "downtown la",
+      "long beach",
+      "torrance",
+      "marina del rey",
+      "century city",
+      "sherman oaks",
+      "studio city",
+      "encino"
+    ],
+    "orange_county": [
+      "orange county",
+      "irvine",
+      "newport beach",
+      "anaheim",
+      "santa ana",
+      "costa mesa",
+      "huntington beach",
+      "laguna beach",
+      "tustin",
+      "fullerton",
+      "garden grove",
+      "mission viejo",
+      "lake forest",
+      "orange, ca"
+    ],
+    "remote": [
+      "remote",
+      "work from home",
+      "wfh",
+      "anywhere",
+      "distributed",
+      "united states remote",
+      "us remote",
+      "remote us",
+      "remote-us"
+    ]
+  }
+}

@@ -31,10 +31,7 @@ def venv_python(venv_dir: Path = VENV_DIR) -> Path:
 
 
 def deps_importable() -> bool:
-    return (
-        importlib.util.find_spec("yaml") is not None
-        and importlib.util.find_spec("requests") is not None
-    )
+    return importlib.util.find_spec("requests") is not None
 
 
 def create_venv(venv_dir: Path) -> None:

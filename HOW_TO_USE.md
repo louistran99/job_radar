@@ -23,26 +23,31 @@ In Cursor or VS Code, select the Python interpreter at `.venv/bin/python`.
 
 ## Config
 
-Committed defaults live in [`config/jobs.yaml`](config/jobs.yaml): ATS URL templates, company slugs, title match axes (level AND domain), and location keywords.
+Three committed JSON files:
 
-The first run that uses the default path copies that file to **gitignored** `config/jobs.local.yaml`. Edit the local copy to add companies or change level/domain phrases without dirtying git.
+| File | Purpose |
+|------|---------|
+| [`config/jobs.json`](config/jobs.json) | Title match axes (level AND domain), location keywords, fetch delay |
+| [`config/companies.json`](config/companies.json) | Company catalog (`name`, `ats`, `slug`, or Workday params) |
+| [`config/smallset.json`](config/smallset.json) | 15-company subset for local test runs (`--small-set`) |
+| [`config/ats.json`](config/ats.json) | ATS URL templates and enabled flags |
+
+The first run that uses the default path copies `jobs.json` to **gitignored** `config/jobs.local.json`. Edit the local copy to change level/domain phrases or locations without dirtying git. Add or change companies in `companies.json`.
 
 ```bash
 python3 main.py --verbose         # setup + fetch (creates .venv on first run)
 python3 main.py --validate-only   # probe slugs; 404s are skipped with a warning
-python3 main.py --replace-report  # overwrite report.md instead of appending
-python3 main.py --config /path/to/other.yaml
+python3 main.py --replace-report  # overwrite report.md instead of prepending
+python3 main.py --config /path/to/other.json
+python3 main.py --small-set smallset.json --verbose
 ```
 
-Bad slugs are skipped, not a hard fail. Disable a company with `enabled: false`.
+Bad slugs are skipped, not a hard fail. Disable an ATS in `ats.json` with `"enabled": false`. Every company whose ATS is implemented and enabled is fetched unless `--small-set` points at a subset file (relative names also resolve under `config/`).
 
 Gem boards use the path segment from `https://jobs.gem.com/{slug}`:
 
-```yaml
-- name: Gem
-  ats: gem
-  slug: gem
-  enabled: true
+```json
+{ "name": "Gem", "ats": "gem", "slug": "gem" }
 ```
 
 Probe a board (same headers as the monitor). Unknown slugs return 404 and are skipped:
@@ -53,7 +58,7 @@ curl -i 'https://api.gem.com/job_board/v0/gem/job_posts/' \
   -H 'User-Agent: job-search-monitor/1.0'
 ```
 
-TBD stubs for Workday, SmartRecruiters, and Workable are commented in `sources` (see [ATS API reference](https://conorscode.github.io/ats-api-reference/)).
+Disabled stubs for Workday, SmartRecruiters, Workable, Recruitee, Personio, and BambooHR live in `ats.json` (see [ATS API reference](https://conorscode.github.io/ats-api-reference/)).
 
 ## Output
 
@@ -62,7 +67,7 @@ Gitignored `output/`:
 | File | Purpose |
 |------|---------|
 | `snapshot.json` | Matched jobs from this run (identity `{ats}:{slug}:{job_id}`) |
-| `report.md` | New / Removed / Still open (first run is a baseline, not “all new”). Each run appends; `--replace-report` overwrites. |
+| `report.md` | New / Removed / Still open (first run is a baseline, not “all new”). Each run prepends; `--replace-report` overwrites. |
 
 The report markdown is the future email body.
 
