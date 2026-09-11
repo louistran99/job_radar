@@ -62,7 +62,7 @@ Gitignored `output/`:
 | File | Purpose |
 |------|---------|
 | `snapshot.json` | Matched jobs from this run (identity `{ats}:{slug}:{job_id}`) |
-| `report.md` | New / Removed / Still open (first run is a baseline, not “all new”). Each run appends; `--replace-report` overwrites. |
+| `report.md` | New / Removed / Still open (first run is a baseline, not “all new”). Each run prepends; `--replace-report` overwrites. |
 
 The report markdown is the future email body.
 

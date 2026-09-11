@@ -77,7 +77,7 @@ def write_report(path: Path, markdown: str, *, replace: bool = False) -> None:
         body = markdown
     else:
         existing = path.read_text(encoding="utf-8")
-        body = existing.rstrip() + "\n\n" + markdown.lstrip("\n")
+        body = markdown.rstrip() + "\n\n" + existing.lstrip("\n")
         if not body.endswith("\n"):
             body += "\n"
     tmp = path.with_name(path.name + ".tmp")
