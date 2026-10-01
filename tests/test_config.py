@@ -7,6 +7,7 @@ import pytest
 
 from src.config import (
     DEFAULT_COMPANIES_JSON,
+    IMPLEMENTED_ATS,
     enabled_companies,
     load_app_config,
     resolve_companies_path,
@@ -129,8 +130,10 @@ def test_committed_json_configs_load() -> None:
     assert "{slug}" in loaded.sources["gem"]["url"]
     fetchable = enabled_companies(loaded)
     assert len(fetchable) >= 100
-    assert all(c.ats in {"greenhouse", "lever", "ashby", "gem"} for c in fetchable)
+    assert all(c.ats in IMPLEMENTED_ATS for c in fetchable)
     assert all(c.slug for c in fetchable)
+    # Workday needs POST and per-posting detail requests; still unimplemented.
+    assert "workday" not in {c.ats for c in fetchable}
 
 
 def test_resolve_companies_path_none_is_default() -> None:

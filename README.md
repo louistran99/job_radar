@@ -1,6 +1,6 @@
 # ATS job monitor
 
-Poll public Greenhouse, Lever, Ashby, and Gem job boards for titles that match both a level phrase (engineering manager, director, TLM, …) and a domain phrase (mobile, iOS, Android, …) in the Bay Area, Los Angeles, Orange County, or remote. Diff against the last run and prepend to `output/report.md` (use `--replace-report` to overwrite).
+Poll public Greenhouse, Lever, Ashby, Gem, SmartRecruiters, Workable, Recruitee, Personio, and BambooHR job boards for titles that match both a level phrase (engineering manager, director, TLM, …) and a domain phrase (mobile, iOS, Android, …) in the Bay Area, Los Angeles, Orange County, or remote. Diff against the last run and prepend to `output/report.md` (use `--replace-report` to overwrite).
 
 No API keys. Email is not included yet.
 
@@ -30,10 +30,24 @@ A title must match at least one `title_match.level` phrase **and** at least one 
 
 ### Companies
 
-Each entry is `{name, ats, slug}`. Workday rows use `{name, ats, workday}` instead of `slug`. Supported fetch `ats` values: `greenhouse`, `lever`, `ashby`, `gem`. Disable a whole ATS with `"enabled": false` in [`config/ats.json`](config/ats.json). Add a board by appending an object and setting the careers-site slug. Bad slugs are skipped with a warning.
+Each entry is `{name, ats, slug}`. Workday rows use `{name, ats, workday}` instead of `slug`. Supported fetch `ats` values: `greenhouse`, `lever`, `ashby`, `gem`, `smartrecruiters`, `workable`, `recruitee`, `personio`, `bamboohr`. Workday is configured but not implemented yet. Disable a whole ATS with `"enabled": false` in [`config/ats.json`](config/ats.json). Add a board by appending an object and setting the careers-site slug. Bad slugs are skipped with a warning.
 
 ```json
 { "name": "Stripe", "ats": "greenhouse", "slug": "stripe" }
 ```
 
-See [HOW_TO_USE.md](HOW_TO_USE.md) for locations, local cron, and GitHub Actions.
+SmartRecruiters slugs are case sensitive, and an unknown one returns an empty board rather than a 404, so it is reported as zero jobs instead of a skip.
+
+### Pagination
+
+Most boards return everything in one response. An ATS that pages adds a `page` block to its `ats.json` entry, and the fetcher walks `offset` until a short page arrives or `max_pages` is hit:
+
+```json
+"smartrecruiters": {
+  "enabled": true,
+  "url": "https://api.smartrecruiters.com/v1/companies/{slug}/postings",
+  "page": {"size": 100, "max_pages": 20}
+}
+```
+
+See [docs/ats-responses.md](docs/ats-responses.md) for each ATS payload shape and how it maps onto a `Job`, and [HOW_TO_USE.md](HOW_TO_USE.md) for locations, local cron, and GitHub Actions.

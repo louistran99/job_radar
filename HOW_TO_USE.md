@@ -58,7 +58,7 @@ curl -i 'https://api.gem.com/job_board/v0/gem/job_posts/' \
   -H 'User-Agent: job-search-monitor/1.0'
 ```
 
-Disabled stubs for Workday, SmartRecruiters, Workable, Recruitee, Personio, and BambooHR live in `ats.json` (see [ATS API reference](https://conorscode.github.io/ats-api-reference/)).
+SmartRecruiters, Workable, Recruitee, Personio, and BambooHR are enabled alongside the four above. Workday remains a disabled stub in `ats.json` because it needs POST and a per-posting detail request. [docs/ats-responses.md](docs/ats-responses.md) documents every payload shape, the URLs built for boards that return none, and what Workday still needs (see also the [ATS API reference](https://conorscode.github.io/ats-api-reference/)).
 
 ## Output
 
