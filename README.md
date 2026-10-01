@@ -50,4 +50,4 @@ Most boards return everything in one response. An ATS that pages adds a `page` b
 }
 ```
 
-See [docs/ats-responses.md](docs/ats-responses.md) for each ATS payload shape and how it maps onto a `Job`, and [HOW_TO_USE.md](HOW_TO_USE.md) for locations, local cron, and GitHub Actions.
+See [docs/ats-responses.md](docs/ats-responses.md) for each ATS payload shape and how it maps onto a `Job`, and [HOW_TO_USE.md](HOW_TO_USE.md) for locations and GitHub Actions.
