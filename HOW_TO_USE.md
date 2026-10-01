@@ -1,13 +1,13 @@
 # How to Use — ATS job monitor
 
-Operational guide for local setup, crontab, and GitHub Actions.
+Operational guide for local setup and GitHub Actions.
 
 ## Prerequisites
 
 - Python 3.10 or newer
 - Git
 
-A GitHub remote is only required for the daily Action (Phase 2). Local CLI and cron work without it.
+A GitHub remote is only required for the daily Action (Phase 2). The local CLI works without it.
 
 ## First-time local setup
 
@@ -58,7 +58,7 @@ curl -i 'https://api.gem.com/job_board/v0/gem/job_posts/' \
   -H 'User-Agent: job-search-monitor/1.0'
 ```
 
-Disabled stubs for Workday, SmartRecruiters, Workable, Recruitee, Personio, and BambooHR live in `ats.json` (see [ATS API reference](https://conorscode.github.io/ats-api-reference/)).
+SmartRecruiters, Workable, Recruitee, Personio, and BambooHR are enabled alongside the four above. Workday remains a disabled stub in `ats.json` because it needs POST and a per-posting detail request. [docs/ats-responses.md](docs/ats-responses.md) documents every payload shape, the URLs built for boards that return none, and what Workday still needs (see also the [ATS API reference](https://conorscode.github.io/ats-api-reference/)).
 
 ## Output
 
@@ -79,20 +79,11 @@ pytest
 
 Tests use in-memory fakes and do not call the network.
 
-## macOS cron (06:00 Pacific)
-
-`crontab -e`. macOS cron uses the system timezone; set the Mac to Pacific or use `CRON_TZ` where supported. Replace `/path/to/this/repo` with the absolute path to your clone:
-
-```
-CRON_TZ=America/Los_Angeles
-0 6 * * * cd /path/to/this/repo && mkdir -p output && .venv/bin/python main.py >> output/cron.log 2>&1
-```
-
 ## GitHub Action (after local works)
 
 The workflow [`.github/workflows/fetch-jobs.yml`](.github/workflows/fetch-jobs.yml) lives on `main` at `github.com:louistran99/job_radar`. The daily schedule only runs from the default branch.
 
-- Cron: `0 14 * * *` UTC ≈ 06:00 PST / 07:00 PDT
+- Runs daily at 14:00 UTC ≈ 06:00 PST / 07:00 PDT
 - Also runnable via **Actions → Fetch jobs → Run workflow**
 - No secrets for fetching
 - Previous `jobs-snapshot` artifact is downloaded when present (first CI run is a baseline)

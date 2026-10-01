@@ -21,23 +21,24 @@
     "url": "https://{tenant}.{shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs"
   },
   "smartrecruiters": {
-    "enabled": false,
-    "url": "https://api.smartrecruiters.com/v1/companies/{slug}/postings"
+    "enabled": true,
+    "url": "https://api.smartrecruiters.com/v1/companies/{slug}/postings",
+    "page": {"size": 100, "max_pages": 20}
   },
   "workable": {
-    "enabled": false,
+    "enabled": true,
     "url": "https://apply.workable.com/api/v1/widget/accounts/{slug}"
   },
   "recruitee": {
-    "enabled": false,
+    "enabled": true,
     "url": "https://{slug}.recruitee.com/api/offers/"
   },
   "personio": {
-    "enabled": false,
+    "enabled": true,
     "url": "https://{slug}.jobs.personio.de/search.json"
   },
   "bamboohr": {
-    "enabled": false,
+    "enabled": true,
     "url": "https://{slug}.bamboohr.com/careers/list"
   }
 }

@@ -19,7 +19,19 @@ LOCAL_JOBS_JSON = CONFIG_DIR / "jobs.local.json"
 DEFAULT_COMPANIES_JSON = CONFIG_DIR / "companies.json"
 DEFAULT_ATS_JSON = CONFIG_DIR / "ats.json"
 
-IMPLEMENTED_ATS = frozenset({"greenhouse", "lever", "ashby", "gem"})
+IMPLEMENTED_ATS = frozenset(
+    {
+        "greenhouse",
+        "lever",
+        "ashby",
+        "gem",
+        "smartrecruiters",
+        "workable",
+        "recruitee",
+        "personio",
+        "bamboohr",
+    }
+)
 _COMPANY_META_KEYS = frozenset({"name", "ats", "slug", "platform", "enabled"})
 
 

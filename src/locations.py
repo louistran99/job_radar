@@ -26,3 +26,8 @@ def dedupe_locations(locations: list[str]) -> list[str]:
         seen.add(key)
         result.append(loc)
     return result
+
+
+def join_location_parts(parts: list[str]) -> str:
+    """Join city/region/country fragments, dropping blanks and repeats."""
+    return ", ".join(dedupe_locations([part.strip() for part in parts]))
