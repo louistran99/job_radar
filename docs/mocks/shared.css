@@ -1,0 +1,138 @@
+/* Shared design tokens + primitives for KAN-28 mocks. All three sets use the same
+   tokens so the React Native implementation can share one theme. */
+:root {
+  --page: #eef0f4;
+  --surface: #ffffff;
+  --ink: #14181f;
+  --muted: #566070;      /* 6.4:1 on white */
+  --line: #e1e5eb;
+  --accent: #1f5fd1;     /* 5.9:1 on white */
+  --accent-bg: #e8f0fd;
+  --new: #0b6b3a;        /* 6.3:1 on --new-bg */
+  --new-bg: #dff3e7;
+  --err: #b3261e;
+  --err-bg: #fcebea;
+  --scrim: rgba(20, 24, 31, 0.45);
+  --radius: 12px;
+  --tap: 48px;           /* >= 44pt iOS / 48dp Android */
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 32px; background: var(--page); color: var(--ink);
+  font: 15px/1.4 -apple-system, "SF Pro Text", Roboto, "Segoe UI", system-ui, sans-serif;
+}
+h1, h2, h3, p { margin: 0; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: inherit; }
+:focus-visible { outline: 3px solid #7aa7f0; outline-offset: 2px; }
+[data-scroll] { overflow-y: auto; scrollbar-width: none; }
+[data-scroll]::-webkit-scrollbar { display: none; }
+
+/* ---------- Mock page chrome (not part of the app) ---------- */
+.doc { max-width: 1400px; margin: 0 auto; }
+.sets { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+.sets a { padding: 8px 14px; border-radius: 20px; background: #fff; border: 1px solid var(--line);
+  color: var(--ink); text-decoration: none; font-weight: 600; font-size: 14px; }
+.sets a[aria-current="page"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.doc > header { margin-bottom: 18px; max-width: 880px; }
+.doc > header h1 { font-size: 24px; }
+.doc > header p { color: var(--muted); margin-top: 6px; }
+.doc ul.tradeoffs { margin: 12px 0 0; padding-left: 18px; color: var(--muted); }
+.controls { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; margin-bottom: 22px; }
+.controls .grp { display: flex; align-items: center; gap: 8px; }
+.controls .lbl { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.seg { display: inline-flex; background: #dfe3ea; border-radius: 10px; padding: 3px; }
+.seg button { padding: 7px 13px; border-radius: 8px; font-weight: 600; font-size: 14px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.18); }
+.controls label { display: inline-flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; }
+.stagewrap { display: flex; gap: 36px; flex-wrap: wrap; align-items: flex-start; }
+.notes { width: 330px; font-size: 14px; color: var(--muted); }
+.notes h2 { font-size: 14px; color: var(--ink); margin-bottom: 8px; }
+.notes ol { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.notes b { color: var(--ink); }
+
+/* ---------- Device frames ---------- */
+.phone {
+  width: 375px; height: 780px; background: var(--surface); border-radius: 36px;
+  border: 8px solid #20242c; overflow: hidden; position: relative;
+  display: flex; flex-direction: column; flex: none;
+}
+.statusbar { height: 36px; flex: none; display: flex; justify-content: space-between;
+  align-items: flex-end; padding: 0 22px 4px; font-size: 13px; font-weight: 600; }
+.browser {
+  width: 880px; height: 780px; background: var(--surface); border-radius: 12px;
+  border: 1px solid #c3c9d3; overflow: hidden; position: relative;
+  display: flex; flex-direction: column; flex: none;
+}
+.browser .bar { height: 40px; flex: none; background: #e6e9ee; display: flex; align-items: center;
+  padding: 0 14px; gap: 12px; border-bottom: 1px solid #c3c9d3; }
+.browser .bar i { width: 10px; height: 10px; border-radius: 50%; background: #aab1bd; }
+.browser .bar span { flex: 1; background: #fff; border-radius: 6px; padding: 4px 10px;
+  font-size: 12px; color: var(--muted); }
+.screen { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+/* On web the same screen is a centered column, like the phone but wider. */
+.browser .screen { align-items: center; background: #fafbfc; }
+.browser .screen > .col { width: 100%; max-width: 640px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+.screen > .col { flex: 1; display: flex; flex-direction: column; min-height: 0; position: relative; background: var(--surface); }
+
+/* ---------- App primitives ---------- */
+.appbar { padding: 8px 16px 10px; flex: none; }
+.appbar h1 { font-size: 22px; font-weight: 700; }
+.appbar .sub { color: var(--muted); font-size: 13px; }
+
+/* Pills: value only (no category label), wrap to extra rows, capped at ~3 rows then scroll. */
+.pillwrap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 2px 16px 8px;
+  max-height: 124px; flex: none; }
+.pill {
+  display: inline-flex; align-items: center; height: 32px; padding: 0 2px 0 12px;
+  border-radius: 16px; background: var(--accent-bg); color: var(--accent);
+  font-size: 13px; font-weight: 600; white-space: nowrap;
+}
+.pill .x { width: 28px; height: 28px; display: grid; place-items: center; font-size: 17px; line-height: 1; position: relative; }
+.pill .x::after { content: ""; position: absolute; inset: -8px -6px; } /* 44px hit area */
+.clear-all { color: var(--accent); font-size: 13px; font-weight: 700; padding: 0 8px; white-space: nowrap;
+  height: 44px; display: inline-flex; align-items: center; text-decoration: underline; text-underline-offset: 3px; }
+
+.chev { width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-2px); flex: none; transition: transform .15s; }
+.chev.up { transform: rotate(-135deg) translateY(-2px); }
+
+.check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid #8a93a1; flex: none;
+  display: grid; place-items: center; font-size: 14px; color: #fff; font-weight: 800; }
+.check.on { background: var(--accent); border-color: var(--accent); }
+.check.on::after { content: "\2713"; }
+
+.new { display: inline-block; background: var(--new-bg); color: var(--new); font-size: 11px; font-weight: 800;
+  letter-spacing: .04em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; flex: none; }
+
+.btn { height: var(--tap); border-radius: 24px; padding: 0 22px; font-weight: 700; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center; }
+.btn.primary { background: var(--accent); color: #fff; }
+.btn.ghost { color: var(--accent); }
+.btn.ghost.muted { color: var(--muted); }
+.btn.outline { border: 1.5px solid var(--accent); color: var(--accent); }
+
+/* Skeleton / state blocks */
+.sk { background: #e6e9ee; border-radius: 6px; animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .45; } }
+.progress { height: 3px; background: var(--accent-bg); flex: none; position: relative; overflow: hidden; }
+.progress::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; background: var(--accent);
+  animation: slide 1s ease-in-out infinite; }
+@keyframes slide { from { left: -40%; } to { left: 100%; } }
+
+.state { padding: 44px 28px; text-align: center; color: var(--muted); }
+.state h3 { color: var(--ink); font-size: 17px; margin-bottom: 6px; }
+.state .btn { margin-top: 18px; }
+.state .glyph { width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 14px; display: grid;
+  place-items: center; font-weight: 800; font-size: 22px; background: var(--line); color: var(--muted); }
+.state .glyph.err { background: var(--err-bg); color: var(--err); }
+
+.banner { margin: 8px 16px; padding: 4px 6px 4px 14px; border-radius: 10px; background: var(--err-bg); color: var(--err);
+  font-size: 14px; display: flex; gap: 10px; align-items: center; flex: none; }
+.banner b { flex: 1; font-weight: 600; }
+.banner .retry { font-weight: 800; padding: 0 10px; min-height: 44px; }
+
+.scrim { position: absolute; inset: 0; background: var(--scrim); z-index: 5; animation: fade .15s; }
+@keyframes fade { from { opacity: 0; } }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 18px; z-index: 30; background: #20242c; color: #fff;
+  padding: 12px 14px; border-radius: 10px; font-size: 14px; animation: fade .15s; }
