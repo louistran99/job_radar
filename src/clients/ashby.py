@@ -5,7 +5,12 @@ from __future__ import annotations
 from typing import Any
 
 from src.models import Company, Job
-from src.locations import dedupe_locations, split_location_text
+from src.locations import (
+    dedupe_locations,
+    normalize_workplace_type,
+    split_location_text,
+)
+from src.timestamps import parse_timestamp
 
 SOURCE = "ashby"
 
@@ -47,8 +52,7 @@ def normalize(raw: dict[str, Any], company: Company) -> Job | None:
             locations.extend(split_location_text(secondary))
 
     locations = dedupe_locations(locations)
-    workplace = raw.get("workplaceType")
-    workplace_type = str(workplace).strip() if workplace else None
+    workplace_type = normalize_workplace_type(raw.get("workplaceType"))
     is_remote = bool(raw.get("isRemote"))
     url = str(raw.get("jobUrl") or raw.get("applyUrl") or "")
     return Job(
@@ -61,4 +65,5 @@ def normalize(raw: dict[str, Any], company: Company) -> Job | None:
         locations=locations,
         is_remote=is_remote,
         workplace_type=workplace_type,
+        posted_at=parse_timestamp(raw.get("publishedAt")),
     )

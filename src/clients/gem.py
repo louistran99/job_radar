@@ -8,29 +8,19 @@ from __future__ import annotations
 from typing import Any
 
 from src.models import Company, Job
-from src.locations import dedupe_locations, split_location_text
+from src.locations import (
+    dedupe_locations,
+    normalize_workplace_type,
+    split_location_text,
+)
+from src.timestamps import parse_timestamp
 
 SOURCE = "gem"
-
-_ONSITE_TYPES = frozenset({"in_office", "on_site", "onsite"})
-
 
 def extract_jobs(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, list):
         return [job for job in payload if isinstance(job, dict)]
     return []
-
-
-def _workplace_type(location_type: Any) -> str | None:
-    if location_type is None:
-        return None
-    raw = str(location_type).strip()
-    if not raw:
-        return None
-    key = raw.casefold().replace("-", "_").replace(" ", "_")
-    if key in _ONSITE_TYPES:
-        return "onsite"
-    return raw
 
 
 def _office_location_text(office: dict[str, Any]) -> str:
@@ -72,8 +62,8 @@ def normalize(raw: dict[str, Any], company: Company) -> Job | None:
         return None
 
     locations = _locations(raw)
-    workplace_type = _workplace_type(raw.get("location_type"))
-    is_remote = (workplace_type or "").casefold() == "remote" or any(
+    workplace_type = normalize_workplace_type(raw.get("location_type"))
+    is_remote = workplace_type == "remote" or any(
         "remote" in loc.lower() for loc in locations
     )
     url = str(raw.get("absolute_url") or "")
@@ -87,4 +77,5 @@ def normalize(raw: dict[str, Any], company: Company) -> Job | None:
         locations=locations,
         is_remote=is_remote,
         workplace_type=workplace_type,
+        posted_at=parse_timestamp(raw.get("first_published_at")),
     )

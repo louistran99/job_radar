@@ -15,6 +15,7 @@ from src.locations import (
     join_location_parts,
     split_location_text,
 )
+from src.timestamps import parse_timestamp
 
 SOURCE = "smartrecruiters"
 
@@ -80,4 +81,5 @@ def normalize(raw: dict[str, Any], company: Company) -> Job | None:
         locations=locations,
         is_remote=is_remote,
         workplace_type=workplace_type,
+        posted_at=parse_timestamp(raw.get("releasedDate")),
     )

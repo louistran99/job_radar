@@ -12,6 +12,34 @@ Every adapter exposes the same two functions:
 
 Each adapter drops records with no id or a blank title.
 
+## Posted time and workplace type
+
+`Job.posted_at` is an aware UTC `datetime`, or `None` when the board's list
+payload has no publish time. `src/timestamps.py` parses every format below.
+
+| ATS | Field | Format |
+|-----|-------|--------|
+| Greenhouse | `first_published` | ISO 8601 with offset (`updated_at` is not used; it moves on every edit) |
+| Lever | `createdAt` | epoch milliseconds |
+| Ashby | `publishedAt` | ISO 8601 |
+| Gem | `first_published_at` | ISO 8601 |
+| SmartRecruiters | `releasedDate` | ISO 8601 |
+| Workable | `published_on` | date, stored as midnight UTC |
+| Recruitee | `published_at` | `2026-09-18 13:27:28 UTC` |
+| Personio | none | `posted_at` stays `None` |
+| BambooHR | none | `posted_at` stays `None` |
+
+`Job.workplace_type` is `remote`, `hybrid`, `onsite`, or `None`. Lever, Ashby,
+and Gem send free-form strings (`OnSite`, `on-site`, `in_office`,
+`unspecified`), so they go through `normalize_workplace_type` in
+[`src/locations.py`](../src/locations.py): case, spaces, hyphens, and
+underscores are ignored, `in_office` maps to `onsite`, and anything
+unrecognized becomes `None`. The Supabase `workplace_type` enum accepts only
+those three values.
+
+The Supabase schema is in
+[`supabase/migrations/0001_job_radar.sql`](../supabase/migrations/0001_job_radar.sql).
+
 ## Summary
 
 | ATS | Records at | Job id | Title | Job URL | Paged |

@@ -14,6 +14,7 @@ from src.locations import (
     join_location_parts,
     split_location_text,
 )
+from src.timestamps import parse_timestamp
 
 SOURCE = "workable"
 
@@ -79,4 +80,6 @@ def normalize(raw: dict[str, Any], company: Company) -> Job | None:
         locations=locations,
         is_remote=is_remote,
         workplace_type="remote" if raw.get("telecommuting") else None,
+        # published_on is a date, so it lands at midnight UTC.
+        posted_at=parse_timestamp(raw.get("published_on")),
     )

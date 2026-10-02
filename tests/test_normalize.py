@@ -81,7 +81,7 @@ def test_ashby_skips_unlisted_and_trims_title() -> None:
     assert job.locations[0] == "New York, NY (HQ)"
     assert "Remote (US)" in job.locations
     assert job.is_remote is True
-    assert job.workplace_type == "Hybrid"
+    assert job.workplace_type == "hybrid"
 
 
 def test_gem_normalize_offices_and_location_types() -> None:

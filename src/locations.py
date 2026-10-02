@@ -28,6 +28,27 @@ def dedupe_locations(locations: list[str]) -> list[str]:
     return result
 
 
+_WORKPLACE_ALIASES = {
+    "remote": "remote",
+    "hybrid": "hybrid",
+    "onsite": "onsite",
+    "inoffice": "onsite",
+}
+
+
+def normalize_workplace_type(value: object) -> str | None:
+    """Map a board's workplace string to remote, hybrid, onsite, or None.
+
+    Case, spaces, hyphens, and underscores are ignored, so `OnSite`, `on-site`,
+    and `on_site` all give `onsite`. Anything unrecognized (`unspecified`,
+    `flexible`) gives None.
+    """
+    if value is None:
+        return None
+    key = re.sub(r"[\s_-]+", "", str(value).casefold())
+    return _WORKPLACE_ALIASES.get(key)
+
+
 def join_location_parts(parts: list[str]) -> str:
     """Join city/region/country fragments, dropping blanks and repeats."""
     return ", ".join(dedupe_locations([part.strip() for part in parts]))
