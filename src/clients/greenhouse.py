@@ -6,6 +6,7 @@ from typing import Any
 
 from src.models import Company, Job
 from src.locations import dedupe_locations, split_location_text
+from src.timestamps import parse_timestamp
 
 SOURCE = "greenhouse"
 
@@ -57,4 +58,6 @@ def normalize(raw: dict[str, Any], company: Company) -> Job | None:
         locations=locations,
         is_remote=is_remote,
         workplace_type=None,
+        # first_published, not updated_at: updated_at moves on every edit.
+        posted_at=parse_timestamp(raw.get("first_published")),
     )
