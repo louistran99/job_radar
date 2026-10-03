@@ -1,0 +1,15 @@
+---
+description: Stay within the Jira ticket, ask when unclear, keep code simple
+alwaysApply: true
+---
+# Scope and clarity
+
+- Treat the Jira ticket as the scope of work. Read the ticket (summary, description, and acceptance criteria) before designing or coding. Match the ticket key from the branch name or from what the user names (for example KAN-32).
+- Implement only what that ticket specifies.
+- If more work would help, say so and stop. Do not implement it unless the user asks.
+- If the ticket or the request is unclear, ask a clarifying question before writing code or changing design. Do not fill gaps with assumptions.
+
+# Code
+
+- Keep the design and the code simple to follow.
+- Write the code so a future reader can see what it does from the structure and names, with a short comment only where the intent is not obvious.
