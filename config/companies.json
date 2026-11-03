@@ -233,7 +233,7 @@
   {"name": "Workato", "ats": "greenhouse", "slug": "workato"},
   {"name": "Celigo", "ats": "greenhouse", "slug": "celigo"},
   {"name": "Appian", "ats": "greenhouse", "slug": "appian"},
-  {"name": "Mercury", "ats": "ashby", "slug": "mercury"},
+  {"name": "Mercury", "ats": "greenhouse", "slug": "mercury"},
   {"name": "TrueLayer", "ats": "greenhouse", "slug": "truelayer"},
   {"name": "Sezzle", "ats": "greenhouse", "slug": "sezzle"},
   {"name": "Luno", "ats": "greenhouse", "slug": "luno"},
@@ -386,5 +386,6 @@
   {"name": "Gem", "ats": "gem", "slug": "gem"},
   {"name": "Drivemode", "ats": "lever", "slug": "drivemode"},
   {"name": "Quo", "ats": "gem", "slug": "quo"},
-  {"name": "Thumbtack", "ats": "ashby", "slug": "thumbtack"}
+  {"name": "Thumbtack", "ats": "ashby", "slug": "thumbtack"},
+  {"name": "Hinge Health", "ats": "ashby", "slug": "hinge-health"}
 ]
